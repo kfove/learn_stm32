@@ -46,6 +46,7 @@ fn main() -> ! {
     let mut display =
         Ssd1306::new(interface, DisplaySize128x64, DisplayRotation::Rotate0).into_terminal_mode();
     display.init().unwrap();
+    display.clear().unwrap();
     match display.write_str("Hello, World!                                ") {
         Ok(_) => hprintln!("ok"),
         Err(_) => {
