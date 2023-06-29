@@ -7,11 +7,11 @@ use cortex_m_rt::entry;
 /// 忽略panic
 use panic_halt as _;
 
+/// 引入semihosting,方便调试。意味半主机模式
+use cortex_m_semihosting::hprintln;
 /// 引入stm32f1xx_hal,pac是外设接口Peripherals, prelude中有许多常用的trait,
 /// 比如将usize转化成Rate的.Hz()方法
 use stm32f1xx_hal::{pac, prelude::*};
-/// 引入semihosting,方便调试。意味半主机模式
-use cortex_m_semihosting::hprintln;
 /// 入口函数,名字随意, 返回值是 !，在rust中这是一个never类型,panic!和loop返回值就是never
 #[entry]
 fn main() -> ! {

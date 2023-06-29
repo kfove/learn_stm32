@@ -8,7 +8,7 @@ use panic_halt as _;
 #[rtic::app(device = stm32f1xx_hal::pac, peripherals = true)]
 mod app {
     use cortex_m_semihosting::hprintln;
-    use stm32f1xx_hal::{prelude::*};
+    use stm32f1xx_hal::prelude::*;
 
     #[shared]
     struct Shared {}
