@@ -9,7 +9,7 @@ use rtic::app;
 
 #[app(device = stm32f1xx_hal::pac, peripherals = true, dispatchers = [EXTI0])]
 mod app {
-    use core::fmt::Write;// 为Ssd1306实现write
+    use core::fmt::Write; // 为Ssd1306实现write
     use cortex_m_semihosting::hprintln;
     use ssd1306::{mode::*, prelude::*, size::DisplaySize128x64, I2CDisplayInterface, Ssd1306};
     use stm32f1xx_hal::{
@@ -79,7 +79,10 @@ mod app {
         .into_terminal_mode();
         match display.init() {
             Ok(_) => hprintln!("display init"),
-            Err(_) => {hprintln!("error to init display");panic!("error")}
+            Err(_) => {
+                hprintln!("error to init display");
+                panic!("error")
+            }
         }
         display.clear().unwrap();
         hprintln!("Hello, World!");

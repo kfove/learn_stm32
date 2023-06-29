@@ -39,7 +39,7 @@ fn main() -> ! {
     let mut timer = Timer::syst(cp.SYST, &clocks).counter_hz();
     // 计数1Hz,
     // 意味这一秒内，信号只跳变一次，及只计数1次。,如果是20.Hz(),速度会更快。因为1s内计数两次
-      timer.start(1.Hz()).unwrap();
+    timer.start(1.Hz()).unwrap();
     loop {
         // block！会在timer触发后停止，他会阻塞线程，直到计数器计数完一次
         nb::block!(timer.wait()).unwrap();
