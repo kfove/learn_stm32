@@ -14,6 +14,7 @@ panic-halt = "0.2.0"
 rtic-macros = "2.0.0"
 rtic-sync = "1.0.1"
 rtic-monotonics = {version = "1.0.0", features = ["cortex-m-systick"]}
+ssd1306 = "0.8.0"
 # rtic-time = "1.0.0"
 # rtic-common = "1.0.0"
 [dependencies.stm32f1xx-hal]
