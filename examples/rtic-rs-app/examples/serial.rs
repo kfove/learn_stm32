@@ -14,7 +14,6 @@ use stm32f1xx_hal::{
 fn main() -> ! {
     let dp = pac::Peripherals::take().unwrap();
 
-
     let mut flash = dp.FLASH.constrain();
     let rcc = dp.RCC.constrain();
 
@@ -43,7 +42,7 @@ fn main() -> ! {
     let rx = gpiob.pb11;
 
     // 比特率9600
-    let mut serial = Serial::new(
+    let serial = Serial::new(
         dp.USART3,
         (tx, rx),
         &mut afio.mapr,
@@ -51,16 +50,12 @@ fn main() -> ! {
         &clocks,
     );
 
-    block!(serial.tx.write(b'X')).unwrap();
-
-    let rec = block!(serial.rx.read()).unwrap();
-    assert_eq!(rec, b'X');
-
-    // 我们可以将tx和rx单独分出来,这方便我们在不同任务中使用
+    // 我们可以将tx和rx单独分出来,这方便我们在不同任务中使用,也可以serial.tx直接访问
     let (mut tx, mut rx) = serial.split();
-    block!(tx.write(b'Y')).unwrap();
-    let rec = block!(rx.read()).unwrap();
-    assert_eq!(rec, b'Y');
 
-    loop {}
+    loop {
+        if let Ok(rec) = block!(rx.read()) {
+            block!(tx.write(rec+1)).unwrap();
+        }
+    }
 }
