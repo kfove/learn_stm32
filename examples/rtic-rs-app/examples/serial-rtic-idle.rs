@@ -53,7 +53,7 @@ mod app {
         tx.listen();
         // 开始监听接受的中断事件和空闲中断事件,空闲中断的作用是在接受完数据后，如果没有新数据到来，那么就进入空闲中断
         rx.listen(); // 一次数据触发一次中断，多数据是频繁中断
-                     // rx.listen_idle(); // 多次数据不会进入空闲中断，当没有数据时，中断，能够让单片机处理接受数据不抽搐（频繁出入中断）
+        rx.listen_idle(); // 多次数据不会进入空闲中断，当没有数据时，中断，能够让单片机处理接受数据不抽搐（频繁出入中断）
 
         (Shared {}, Local { tx, rx, buf })
     }
@@ -65,6 +65,8 @@ mod app {
         }
     }
 
+    // 这里有个bug, 第一次发送一个数据，可以立即返回,但是后面要积满2个以上才行,比如：后面发两次 1, 返回 11
+    // 缺点是当发送数据是线程是阻塞的，不会管你有发送什么过来，这一部分会消失
     #[task(binds = USART3, local = [tx, rx, index: usize = 0, buf])]
     fn usart3(cx: usart3::Context) {
         // 这里写的复杂，可以使用 let tx = cx.local.tx 简化
@@ -82,8 +84,6 @@ mod app {
                     });
                     *cx.local.index = 0;
                 }
-                // 读取到数据的时候, 打开空闲中断
-                cx.local.rx.listen_idle();
             }
             // 没有数据，又是空闲的时候
         } else if cx.local.rx.is_idle() {
@@ -94,5 +94,6 @@ mod app {
             });
             *cx.local.index = 0;
         }
+        cx.local.rx.listen();
     }
 }
